@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solar_mobile/screens/tabs/data_tab.dart';
 import 'package:solar_mobile/screens/tabs/home_tab.dart';
 import 'package:solar_mobile/screens/tabs/settings_tab.dart';
 
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> children = [
     const HomeTab(),
-    const SizedBox(),
+    const DataTab(),
     const SettingsTab(),
   ];
 
