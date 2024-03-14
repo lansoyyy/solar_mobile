@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:solar_mobile/widgets/button_widget.dart';
 import 'package:solar_mobile/widgets/text_widget.dart';
 
@@ -12,26 +14,8 @@ class LoadPage extends StatefulWidget {
 }
 
 class _LoadPageState extends State<LoadPage> {
-  var dropItems = [
-    'Today',
-    'Yesterday',
-    '2 Days Ago',
-    'Last Week',
-    'Last Month'
-  ];
-
-  var filter = 'Today';
-  var dropValue = 0;
-
   @override
   Widget build(BuildContext context) {
-    final List<SalesData> chartData = [
-      SalesData(DateTime(2010), 35),
-      SalesData(DateTime(2011), 28),
-      SalesData(DateTime(2012), 34),
-      SalesData(DateTime(2013), 32),
-      SalesData(DateTime(2014), 40)
-    ];
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -44,160 +28,383 @@ class _LoadPageState extends State<LoadPage> {
           ),
         ),
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const SizedBox(
-                height: 50,
-              ),
-              SizedBox(
-                height: 600,
-                width: 400,
-                child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          TextWidget(
-                            text: index == 0
-                                ? 'Solar Panel Status'
-                                : index == 1
-                                    ? 'Wind Turbine Status'
-                                    : index == 2
-                                        ? 'Charging Rate Status'
-                                        : 'Discharging Rate Status',
-                            fontSize: 24,
-                            fontFamily: 'Bold',
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                TextWidget(
+                  text: 'Load Control',
+                  fontSize: 28,
+                  color: Colors.white,
+                  fontFamily: 'Bold',
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.amber,
+                        ),
+                      ),
+                      width: 150,
+                      height: 180,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Image.asset('assets/images/socket.png'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
                           ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20, right: 20),
-                            child: Container(
-                              color: Colors.white,
-                              height: index == 2 || index == 3 ? 350 : 200,
-                              width: 375,
-                              child: index == 2 || index == 3
-                                  ? Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceEvenly,
-                                          children: [
-                                            SizedBox(
-                                              width: 175,
-                                              height: 150,
-                                              child: GaugeChart(
-                                                sign: 'C',
-                                                data: 100,
-                                                opium: '28 - 30',
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 175,
-                                              height: 150,
-                                              child: GaugeChart(
-                                                sign: 'C',
-                                                data: 100,
-                                                opium: '28 - 30',
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          width: 175,
-                                          height: 150,
-                                          child: GaugeChart(
-                                            sign: 'C',
-                                            data: 100,
-                                            opium: '28 - 30',
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                  : Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        SizedBox(
-                                          width: 175,
-                                          height: 150,
-                                          child: GaugeChart(
-                                            sign: 'C',
-                                            data: 100,
-                                            opium: '28 - 30',
-                                          ),
-                                        ),
-                                        SizedBox(
-                                          width: 175,
-                                          height: 150,
-                                          child: GaugeChart(
-                                            sign: 'C',
-                                            data: 100,
-                                            opium: '28 - 30',
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Load 1',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: Switch(
+                              value: false,
+                              onChanged: (value) {},
                             ),
                           ),
-                          const SizedBox(
-                            height: 50,
-                          ),
-                          ButtonWidget(
-                            radius: 100,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            label: 'DD / MM / YY                 HH : MM AM',
-                            onPressed: () {},
-                            textColor: Colors.black,
+                            borderRadius: BorderRadius.circular(100),
                           ),
-                          const SizedBox(
-                            height: 20,
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Set Timer',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_downward,
+                            ),
                           ),
-                          ButtonWidget(
-                            radius: 100,
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            label: 'CHECK BATTERY STATUS',
-                            onPressed: () {},
-                            textColor: Colors.black,
+                            borderRadius: BorderRadius.circular(100),
                           ),
-                          const SizedBox(
-                            height: 10,
+                          width: 200,
+                          child: ListTile(
+                            title: TextWidget(
+                              text: ' Up Time: HH : MM',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              for (int i = 0; i < 4; i++)
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 5, right: 5),
-                                  child: Container(
-                                    width: 10,
-                                    height: 10,
-                                    decoration: BoxDecoration(
-                                        color: index == i
-                                            ? Colors.black
-                                            : Colors.grey,
-                                        shape: BoxShape.circle),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(
-                            height: 20,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-              ),
-            ],
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                      width: 150,
+                      height: 180,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Image.asset('assets/images/socket.png'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Load 2',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: Switch(
+                              value: false,
+                              onChanged: (value) {},
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Set Timer',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_downward,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            title: TextWidget(
+                              text: ' Up Time: HH : MM',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(
+                          color: Colors.amber,
+                        ),
+                      ),
+                      width: 150,
+                      height: 180,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Image.asset('assets/images/idea.png'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Load 3',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: Switch(
+                              value: false,
+                              onChanged: (value) {},
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Set Timer',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_downward,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            title: TextWidget(
+                              text: ' Up Time: HH : MM',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.5),
+                      ),
+                      width: 150,
+                      height: 180,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Image.asset('assets/images/idea.png'),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 20,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Load 4',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: Switch(
+                              value: false,
+                              onChanged: (value) {},
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            leading: TextWidget(
+                              text: 'Set Timer',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                            trailing: const Icon(
+                              Icons.arrow_downward,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(100),
+                          ),
+                          width: 200,
+                          child: ListTile(
+                            title: TextWidget(
+                              text: ' Up Time: HH : MM',
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontFamily: 'Bold',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 50,
+                ),
+              ],
+            ),
           ),
         ),
       ),
