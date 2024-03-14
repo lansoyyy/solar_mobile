@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solar_mobile/screens/tabs/panel_page.dart';
 import 'package:solar_mobile/widgets/text_widget.dart';
 
 class HomeTab extends StatelessWidget {
@@ -36,7 +37,10 @@ class HomeTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const PanelPage()));
+                  },
                   child: Container(
                     width: 175,
                     height: 150,
@@ -66,7 +70,10 @@ class HomeTab extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const PanelPage()));
+                  },
                   child: Container(
                     width: 175,
                     height: 150,
@@ -104,7 +111,10 @@ class HomeTab extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const PanelPage()));
+                  },
                   child: Container(
                     width: 175,
                     height: 150,

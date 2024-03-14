@@ -42,6 +42,7 @@ dependencies:
   fluttertoast:
   get_storage:
   syncfusion_flutter_charts: ^20.4.38
+  syncfusion_flutter_gauges:
 
 dev_dependencies:
   flutter_test:
