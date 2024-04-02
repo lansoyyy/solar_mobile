@@ -1,4 +1,6 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:solar_mobile/widgets/button_widget.dart';
 import 'package:solar_mobile/widgets/text_widget.dart';
 
@@ -12,26 +14,28 @@ class PanelPage extends StatefulWidget {
 }
 
 class _PanelPageState extends State<PanelPage> {
-  var dropItems = [
-    'Today',
-    'Yesterday',
-    '2 Days Ago',
-    'Last Week',
-    'Last Month'
-  ];
+  bool hasLoaded = false;
 
-  var filter = 'Today';
-  var dropValue = 0;
+  @override
+  void initState() {
+    super.initState();
+    FirebaseDatabase.instance
+        .ref('users/')
+        .orderByKey()
+        .onValue
+        .listen((DatabaseEvent event) {
+      final dynamic data = event.snapshot.value;
+
+      print(data);
+
+      setState(() {
+        hasLoaded = true;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<SalesData> chartData = [
-      SalesData(DateTime(2010), 35),
-      SalesData(DateTime(2011), 28),
-      SalesData(DateTime(2012), 34),
-      SalesData(DateTime(2013), 32),
-      SalesData(DateTime(2014), 40)
-    ];
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -152,19 +156,14 @@ class _PanelPageState extends State<PanelPage> {
                           ButtonWidget(
                             radius: 100,
                             color: Colors.white,
-                            label: 'DD / MM / YY                 HH : MM AM',
+                            label: DateFormat(
+                                    'dd / MM / yy                 hh : mm a')
+                                .format(DateTime.now()),
                             onPressed: () {},
                             textColor: Colors.black,
                           ),
                           const SizedBox(
                             height: 20,
-                          ),
-                          ButtonWidget(
-                            radius: 100,
-                            color: Colors.white,
-                            label: 'CHECK BATTERY STATUS',
-                            onPressed: () {},
-                            textColor: Colors.black,
                           ),
                           const SizedBox(
                             height: 10,

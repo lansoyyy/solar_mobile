@@ -43,7 +43,8 @@ dependencies:
   get_storage:
   syncfusion_flutter_charts: ^20.4.38
   syncfusion_flutter_gauges:
-
+  intl:
+  firebase_database:
 dev_dependencies:
   flutter_test:
     sdk: flutter
