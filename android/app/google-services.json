@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "802606100545",
+    "firebase_url": "https://hybrid-power-generator-default-rtdb.firebaseio.com",
+    "project_id": "hybrid-power-generator",
+    "storage_bucket": "hybrid-power-generator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802606100545:android:9c48b720357ce6d7ddd6c0",
+        "android_client_info": {
+          "package_name": "com.example.solar_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAu8YsrRwNisB3LeoZJtT62zEMbur-SXt0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
