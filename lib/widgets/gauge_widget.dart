@@ -5,8 +5,13 @@ class GaugeChart extends StatelessWidget {
   late dynamic data;
   final String opium;
   final String sign;
-
-  GaugeChart({super.key, this.data, required this.opium, required this.sign});
+  final String text;
+  GaugeChart(
+      {super.key,
+      this.data,
+      required this.opium,
+      required this.sign,
+      required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +57,9 @@ class GaugeChart extends StatelessWidget {
                 positionFactor: 1.50,
                 widget: Column(
                   children: [
-                    const Text(
-                      'Optimum  Voltage at\n12.0 volts to 18.0 volts',
-                      style: TextStyle(
+                    Text(
+                      text,
+                      style: const TextStyle(
                           fontFamily: 'QBold',
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

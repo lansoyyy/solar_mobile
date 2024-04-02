@@ -6,6 +6,7 @@ import 'package:solar_mobile/screens/home_screen.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
+    name: 'hybrid-power-generator',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(const MyApp());
