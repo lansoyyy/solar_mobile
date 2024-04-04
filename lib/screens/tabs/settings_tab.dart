@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:solar_mobile/screens/settings_screen.dart';
 import 'package:solar_mobile/widgets/text_widget.dart';
 
 class SettingsTab extends StatelessWidget {
@@ -46,7 +47,10 @@ class SettingsTab extends StatelessWidget {
                         height: 50,
                       ),
                       ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const SettingsScreen()));
+                        },
                         title: TextWidget(
                           text: 'Set Parameter',
                           fontSize: 24,
@@ -62,7 +66,10 @@ class SettingsTab extends StatelessWidget {
                         height: 20,
                       ),
                       ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const SettingsScreen()));
+                        },
                         title: TextWidget(
                           text: 'Help Center',
                           fontSize: 24,

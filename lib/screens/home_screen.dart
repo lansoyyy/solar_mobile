@@ -21,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final List<Widget> children = [
     const HomeTab(),
-    const DataTab(),
+    DataTab(),
     const SettingsTab(),
   ];
 
