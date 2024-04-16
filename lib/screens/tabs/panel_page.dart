@@ -22,7 +22,7 @@ class _PanelPageState extends State<PanelPage> {
   void initState() {
     super.initState();
     FirebaseDatabase.instance
-        .ref('users/TEAM OTOG/727/')
+        .ref('users/TEAM OTOG/728/')
         .orderByKey()
         .onValue
         .listen((DatabaseEvent event) {
@@ -126,7 +126,7 @@ class _PanelPageState extends State<PanelPage> {
                                                 width: 175,
                                                 height: 150,
                                                 child: GaugeChart(
-                                                  text: 'AMP-HOUR',
+                                                  text: 'PERCENTAGE',
                                                   sign: '',
                                                   data: panelData[
                                                       'Battery Percentage'],

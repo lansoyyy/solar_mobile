@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +18,62 @@ class LoadPage extends StatefulWidget {
 }
 
 class _LoadPageState extends State<LoadPage> {
+  int _count1 = 0;
+  int _count2 = 0;
+  int _count3 = 0;
+  int _count4 = 0;
+
+  final _controller1 = StreamController<int>.broadcast();
+  final _controller2 = StreamController<int>.broadcast();
+  final _controller3 = StreamController<int>.broadcast();
+  final _controller4 = StreamController<int>.broadcast();
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller1.close();
+    _controller2.close();
+    _controller3.close();
+    _controller4.close();
+    super.dispose();
+  }
+
+  void _startCounter1() {
+    Future<void>.delayed(const Duration(seconds: 1), () {
+      _count1++;
+      _controller1.sink.add(_count1);
+      _startCounter1();
+    });
+  }
+
+  void _startCounter2() {
+    Future<void>.delayed(const Duration(seconds: 1), () {
+      _count2++;
+      _controller2.sink.add(_count2);
+      _startCounter2();
+    });
+  }
+
+  void _startCounter3() {
+    Future<void>.delayed(const Duration(seconds: 1), () {
+      _count3++;
+      _controller3.sink.add(_count3);
+      _startCounter3();
+    });
+  }
+
+  void _startCounter4() {
+    Future<void>.delayed(const Duration(seconds: 1), () {
+      _count4++;
+      _controller4.sink.add(_count4);
+      _startCounter4();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,10 +88,7 @@ class _LoadPageState extends State<LoadPage> {
           ),
         ),
         child: StreamBuilder<DatabaseEvent>(
-            stream: FirebaseDatabase.instance
-                .ref()
-                .child('users/TEAM OTOG/728/')
-                .onValue,
+            stream: FirebaseDatabase.instance.ref().onValue,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
                 print(snapshot.error);
@@ -51,7 +106,63 @@ class _LoadPageState extends State<LoadPage> {
               }
               final dynamic data = snapshot.data!.snapshot.value;
 
-              print(data);
+              if (data['RELAY_STATUS_1'] == 1) {
+                _startCounter1();
+              } else if (data['RELAY_STATUS_2'] == 1) {
+                _startCounter2();
+              } else if (data['RELAY_STATUS_3'] == 1) {
+                _startCounter3();
+              } else if (data['RELAY_STATUS_4'] == 1) {
+                _startCounter4();
+              }
+
+              if (data['RELAY_STATUS_1'] == 0) {
+                _count1 = 0;
+                _controller1.close();
+              } else if (data['RELAY_STATUS_2'] == 0) {
+                _count2 = 0;
+                _controller2.close();
+              } else if (data['RELAY_STATUS_3'] == 0) {
+                _count3 = 0;
+                _controller3.close();
+              } else if (data['RELAY_STATUS_4'] == 0) {
+                _count4 = 0;
+                _controller4.close();
+              }
+
+              if (isAfterSelectedTime(_selectedTime1)) {
+                if (data['RELAY_STATUS_1'] == 1) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    FirebaseDatabase.instance.ref().child('').update({
+                      'RELAY_STATUS_1': 0,
+                    });
+                  });
+                }
+              } else if (isAfterSelectedTime(_selectedTime2)) {
+                if (data['RELAY_STATUS_2'] == 1) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    FirebaseDatabase.instance.ref().child('').update({
+                      'RELAY_STATUS_2': 0,
+                    });
+                  });
+                }
+              } else if (isAfterSelectedTime(_selectedTime3)) {
+                if (data['RELAY_STATUS_3'] == 1) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    FirebaseDatabase.instance.ref().child('').update({
+                      'RELAY_STATUS_3': 0,
+                    });
+                  });
+                }
+              } else if (isAfterSelectedTime(_selectedTime4)) {
+                if (data['RELAY_STATUS_4'] == 1) {
+                  WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+                    FirebaseDatabase.instance.ref().child('').update({
+                      'RELAY_STATUS_4': 0,
+                    });
+                  });
+                }
+              }
 
               return SafeArea(
                 child: SingleChildScrollView(
@@ -84,7 +195,9 @@ class _LoadPageState extends State<LoadPage> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: data['RELAY_STATUS_1'] == 0
+                                  ? Colors.white.withOpacity(0.5)
+                                  : Colors.white,
                               border: Border.all(
                                 color: Colors.amber,
                               ),
@@ -117,13 +230,15 @@ class _LoadPageState extends State<LoadPage> {
                                     fontFamily: 'Bold',
                                   ),
                                   trailing: Switch(
-                                    value: data['LOAD1'] == 0 ? false : true,
+                                    value: data['RELAY_STATUS_1'] == 0
+                                        ? false
+                                        : true,
                                     onChanged: (value) {
                                       FirebaseDatabase.instance
                                           .ref()
-                                          .child('users/TEAM OTOG/728/')
+                                          .child('')
                                           .update({
-                                        'LOAD1': value == true ? 1 : 0,
+                                        'RELAY_STATUS_1': value == true ? 1 : 0,
                                       });
                                     },
                                   ),
@@ -132,21 +247,27 @@ class _LoadPageState extends State<LoadPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                width: 200,
-                                child: ListTile(
-                                  leading: TextWidget(
-                                    text: 'Set Timer',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                              GestureDetector(
+                                onTap: () {
+                                  _selectTime1(context, _selectedTime1);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
-                                  trailing: const Icon(
-                                    Icons.arrow_downward,
+                                  width: 200,
+                                  child: ListTile(
+                                    leading: TextWidget(
+                                      text: 'Set Timer',
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontFamily: 'Bold',
+                                    ),
+                                    trailing: TextWidget(
+                                      text: _selectedTime1.format(context),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -160,14 +281,20 @@ class _LoadPageState extends State<LoadPage> {
                                 ),
                                 width: 200,
                                 child: ListTile(
-                                  title: TextWidget(
-                                    text:
-                                        ' Up Time: ${DateFormat('HH:mm').format(DateTime.now())}',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                                    title: Center(
+                                  child: StreamBuilder<int>(
+                                    stream: _controller1.stream,
+                                    initialData: _count1,
+                                    builder: (context, snapshot) {
+                                      return TextWidget(
+                                        text: 'Up Time: ${snapshot.data}',
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontFamily: 'Bold',
+                                      );
+                                    },
                                   ),
-                                ),
+                                )),
                               ),
                             ],
                           ),
@@ -181,7 +308,12 @@ class _LoadPageState extends State<LoadPage> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
+                              color: data['RELAY_STATUS_2'] == 0
+                                  ? Colors.white.withOpacity(0.5)
+                                  : Colors.white,
+                              border: Border.all(
+                                color: Colors.amber,
+                              ),
                             ),
                             width: 150,
                             height: 180,
@@ -211,13 +343,15 @@ class _LoadPageState extends State<LoadPage> {
                                     fontFamily: 'Bold',
                                   ),
                                   trailing: Switch(
-                                    value: data['LOAD2'] == 0 ? false : true,
+                                    value: data['RELAY_STATUS_2'] == 0
+                                        ? false
+                                        : true,
                                     onChanged: (value) {
                                       FirebaseDatabase.instance
                                           .ref()
-                                          .child('users/TEAM OTOG/728/')
+                                          .child('')
                                           .update({
-                                        'LOAD2': value == true ? 1 : 0,
+                                        'RELAY_STATUS_2': value == true ? 1 : 0,
                                       });
                                     },
                                   ),
@@ -226,21 +360,27 @@ class _LoadPageState extends State<LoadPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                width: 200,
-                                child: ListTile(
-                                  leading: TextWidget(
-                                    text: 'Set Timer',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                              GestureDetector(
+                                onTap: () {
+                                  _selectTime2(context, _selectedTime2);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
-                                  trailing: const Icon(
-                                    Icons.arrow_downward,
+                                  width: 200,
+                                  child: ListTile(
+                                    leading: TextWidget(
+                                      text: 'Set Timer',
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontFamily: 'Bold',
+                                    ),
+                                    trailing: TextWidget(
+                                      text: _selectedTime2.format(context),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -254,14 +394,20 @@ class _LoadPageState extends State<LoadPage> {
                                 ),
                                 width: 200,
                                 child: ListTile(
-                                  title: TextWidget(
-                                    text:
-                                        ' Up Time: ${DateFormat('HH:mm').format(DateTime.now())}',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                                    title: Center(
+                                  child: StreamBuilder<int>(
+                                    stream: _controller2.stream,
+                                    initialData: _count2,
+                                    builder: (context, snapshot) {
+                                      return TextWidget(
+                                        text: 'Up Time: ${snapshot.data}',
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontFamily: 'Bold',
+                                      );
+                                    },
                                   ),
-                                ),
+                                )),
                               ),
                             ],
                           ),
@@ -275,7 +421,9 @@ class _LoadPageState extends State<LoadPage> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color: data['RELAY_STATUS_3'] == 0
+                                  ? Colors.white.withOpacity(0.5)
+                                  : Colors.white,
                               border: Border.all(
                                 color: Colors.amber,
                               ),
@@ -308,13 +456,15 @@ class _LoadPageState extends State<LoadPage> {
                                     fontFamily: 'Bold',
                                   ),
                                   trailing: Switch(
-                                    value: data['LOAD3'] == 0 ? false : true,
+                                    value: data['RELAY_STATUS_3'] == 0
+                                        ? false
+                                        : true,
                                     onChanged: (value) {
                                       FirebaseDatabase.instance
                                           .ref()
-                                          .child('users/TEAM OTOG/728/')
+                                          .child('')
                                           .update({
-                                        'LOAD3': value == true ? 1 : 0,
+                                        'RELAY_STATUS_3': value == true ? 1 : 0,
                                       });
                                     },
                                   ),
@@ -323,21 +473,27 @@ class _LoadPageState extends State<LoadPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                width: 200,
-                                child: ListTile(
-                                  leading: TextWidget(
-                                    text: 'Set Timer',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                              GestureDetector(
+                                onTap: () {
+                                  _selectTime3(context, _selectedTime3);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
-                                  trailing: const Icon(
-                                    Icons.arrow_downward,
+                                  width: 200,
+                                  child: ListTile(
+                                    leading: TextWidget(
+                                      text: 'Set Timer',
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontFamily: 'Bold',
+                                    ),
+                                    trailing: TextWidget(
+                                      text: _selectedTime3.format(context),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -351,14 +507,20 @@ class _LoadPageState extends State<LoadPage> {
                                 ),
                                 width: 200,
                                 child: ListTile(
-                                  title: TextWidget(
-                                    text:
-                                        ' Up Time: ${DateFormat('HH:mm').format(DateTime.now())}',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                                    title: Center(
+                                  child: StreamBuilder<int>(
+                                    stream: _controller3.stream,
+                                    initialData: _count3,
+                                    builder: (context, snapshot) {
+                                      return TextWidget(
+                                        text: 'Up Time: ${snapshot.data}',
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontFamily: 'Bold',
+                                      );
+                                    },
                                   ),
-                                ),
+                                )),
                               ),
                             ],
                           ),
@@ -372,7 +534,12 @@ class _LoadPageState extends State<LoadPage> {
                         children: [
                           Container(
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.5),
+                              color: data['RELAY_STATUS_4'] == 0
+                                  ? Colors.white.withOpacity(0.5)
+                                  : Colors.white,
+                              border: Border.all(
+                                color: Colors.amber,
+                              ),
                             ),
                             width: 150,
                             height: 180,
@@ -402,13 +569,15 @@ class _LoadPageState extends State<LoadPage> {
                                     fontFamily: 'Bold',
                                   ),
                                   trailing: Switch(
-                                    value: data['LOAD4'] == 0 ? false : true,
+                                    value: data['RELAY_STATUS_4'] == 0
+                                        ? false
+                                        : true,
                                     onChanged: (value) {
                                       FirebaseDatabase.instance
                                           .ref()
-                                          .child('users/TEAM OTOG/728/')
+                                          .child('')
                                           .update({
-                                        'LOAD4': value == true ? 1 : 0,
+                                        'RELAY_STATUS_4': value == true ? 1 : 0,
                                       });
                                     },
                                   ),
@@ -417,21 +586,27 @@ class _LoadPageState extends State<LoadPage> {
                               const SizedBox(
                                 height: 10,
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(100),
-                                ),
-                                width: 200,
-                                child: ListTile(
-                                  leading: TextWidget(
-                                    text: 'Set Timer',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                              GestureDetector(
+                                onTap: () {
+                                  _selectTime4(context, _selectedTime4);
+                                },
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(100),
                                   ),
-                                  trailing: const Icon(
-                                    Icons.arrow_downward,
+                                  width: 200,
+                                  child: ListTile(
+                                    leading: TextWidget(
+                                      text: 'Set Timer',
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontFamily: 'Bold',
+                                    ),
+                                    trailing: TextWidget(
+                                      text: _selectedTime4.format(context),
+                                      fontSize: 12,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -445,14 +620,20 @@ class _LoadPageState extends State<LoadPage> {
                                 ),
                                 width: 200,
                                 child: ListTile(
-                                  title: TextWidget(
-                                    text:
-                                        ' Up Time: ${DateFormat('HH:mm').format(DateTime.now())}',
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontFamily: 'Bold',
+                                    title: Center(
+                                  child: StreamBuilder<int>(
+                                    stream: _controller4.stream,
+                                    initialData: _count4,
+                                    builder: (context, snapshot) {
+                                      return TextWidget(
+                                        text: 'Up Time: ${snapshot.data}',
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontFamily: 'Bold',
+                                      );
+                                    },
                                   ),
-                                ),
+                                )),
                               ),
                             ],
                           ),
@@ -468,6 +649,73 @@ class _LoadPageState extends State<LoadPage> {
             }),
       ),
     );
+  }
+
+  TimeOfDay _selectedTime1 =
+      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(minutes: 0)));
+
+  TimeOfDay _selectedTime2 =
+      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(minutes: 0)));
+  TimeOfDay _selectedTime3 =
+      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(minutes: 0)));
+  TimeOfDay _selectedTime4 =
+      TimeOfDay.fromDateTime(DateTime.now().add(const Duration(minutes: 0)));
+
+  Future<void> _selectTime1(BuildContext context, TimeOfDay time) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: time,
+    );
+    if (picked != null && picked != time) {
+      setState(() {
+        _selectedTime1 = picked;
+      });
+    }
+  }
+
+  Future<void> _selectTime2(BuildContext context, TimeOfDay time) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: time,
+    );
+    if (picked != null && picked != time) {
+      setState(() {
+        _selectedTime2 = picked;
+      });
+    }
+  }
+
+  Future<void> _selectTime3(BuildContext context, TimeOfDay time) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: time,
+    );
+    if (picked != null && picked != time) {
+      setState(() {
+        _selectedTime3 = picked;
+      });
+    }
+  }
+
+  Future<void> _selectTime4(BuildContext context, TimeOfDay time) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: time,
+    );
+    if (picked != null && picked != time) {
+      setState(() {
+        _selectedTime4 = picked;
+      });
+    }
+  }
+
+  final now = DateTime.now();
+
+  bool isAfterSelectedTime(TimeOfDay time) {
+    final selectedDateTime =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    return now.isAfter(selectedDateTime) ||
+        now.isAtSameMomentAs(selectedDateTime);
   }
 }
 
