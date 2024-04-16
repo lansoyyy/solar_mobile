@@ -23,11 +23,6 @@ class _LoadPageState extends State<LoadPage> {
   int _count3 = 0;
   int _count4 = 0;
 
-  final _controller1 = StreamController<int>.broadcast();
-  final _controller2 = StreamController<int>.broadcast();
-  final _controller3 = StreamController<int>.broadcast();
-  final _controller4 = StreamController<int>.broadcast();
-
   @override
   void initState() {
     super.initState();
@@ -42,36 +37,55 @@ class _LoadPageState extends State<LoadPage> {
     super.dispose();
   }
 
+  bool _isCounting1 = false;
+  bool _isCounting2 = false;
+  bool _isCounting3 = false;
+  bool _isCounting4 = false;
+
+  final _controller2 = StreamController<int>.broadcast();
+  final _controller3 = StreamController<int>.broadcast();
+  final _controller4 = StreamController<int>.broadcast();
+
+  final _controller1 = StreamController<int>.broadcast();
+
   void _startCounter1() {
-    Future<void>.delayed(const Duration(seconds: 1), () {
-      _count1++;
-      _controller1.sink.add(_count1);
-      _startCounter1();
-    });
+    if (_isCounting1) {
+      Future<void>.delayed(const Duration(seconds: 1), () {
+        _count1++;
+        _controller1.sink.add(_count1);
+        _startCounter1();
+      });
+    }
   }
 
   void _startCounter2() {
-    Future<void>.delayed(const Duration(seconds: 1), () {
-      _count2++;
-      _controller2.sink.add(_count2);
-      _startCounter2();
-    });
+    if (_isCounting2) {
+      Future<void>.delayed(const Duration(seconds: 1), () {
+        _count2++;
+        _controller2.sink.add(_count2);
+        _startCounter2();
+      });
+    }
   }
 
   void _startCounter3() {
-    Future<void>.delayed(const Duration(seconds: 1), () {
-      _count3++;
-      _controller3.sink.add(_count3);
-      _startCounter3();
-    });
+    if (_isCounting3) {
+      Future<void>.delayed(const Duration(seconds: 1), () {
+        _count3++;
+        _controller3.sink.add(_count3);
+        _startCounter3();
+      });
+    }
   }
 
   void _startCounter4() {
-    Future<void>.delayed(const Duration(seconds: 1), () {
-      _count4++;
-      _controller4.sink.add(_count4);
-      _startCounter4();
-    });
+    if (_isCounting4) {
+      Future<void>.delayed(const Duration(seconds: 1), () {
+        _count4++;
+        _controller4.sink.add(_count4);
+        _startCounter4();
+      });
+    }
   }
 
   @override
@@ -106,29 +120,29 @@ class _LoadPageState extends State<LoadPage> {
               }
               final dynamic data = snapshot.data!.snapshot.value;
 
-              if (data['RELAY_STATUS_1'] == 1) {
-                _startCounter1();
-              } else if (data['RELAY_STATUS_2'] == 1) {
-                _startCounter2();
-              } else if (data['RELAY_STATUS_3'] == 1) {
-                _startCounter3();
-              } else if (data['RELAY_STATUS_4'] == 1) {
-                _startCounter4();
-              }
+              // if (data['RELAY_STATUS_1'] == 1) {
+              //   _startCounter1();
+              // } else if (data['RELAY_STATUS_2'] == 1) {
+              //   _startCounter2();
+              // } else if (data['RELAY_STATUS_3'] == 1) {
+              //   _startCounter3();
+              // } else if (data['RELAY_STATUS_4'] == 1) {
+              //   _startCounter4();
+              // }
 
-              if (data['RELAY_STATUS_1'] == 0) {
-                _count1 = 0;
-                _controller1.close();
-              } else if (data['RELAY_STATUS_2'] == 0) {
-                _count2 = 0;
-                _controller2.close();
-              } else if (data['RELAY_STATUS_3'] == 0) {
-                _count3 = 0;
-                _controller3.close();
-              } else if (data['RELAY_STATUS_4'] == 0) {
-                _count4 = 0;
-                _controller4.close();
-              }
+              // if (data['RELAY_STATUS_1'] == 0) {
+              //   _count1 = 0;
+              //   _controller1.close();
+              // } else if (data['RELAY_STATUS_2'] == 0) {
+              //   _count2 = 0;
+              //   _controller2.close();
+              // } else if (data['RELAY_STATUS_3'] == 0) {
+              //   _count3 = 0;
+              //   _controller3.close();
+              // } else if (data['RELAY_STATUS_4'] == 0) {
+              //   _count4 = 0;
+              //   _controller4.close();
+              // }
 
               if (isAfterSelectedTime(_selectedTime1)) {
                 if (data['RELAY_STATUS_1'] == 1) {
@@ -240,6 +254,17 @@ class _LoadPageState extends State<LoadPage> {
                                           .update({
                                         'RELAY_STATUS_1': value == true ? 1 : 0,
                                       });
+
+                                      if (data['RELAY_STATUS_1'] == 0) {
+                                        setState(() {
+                                          _isCounting1 = true;
+                                        });
+                                        _startCounter1();
+                                      } else {
+                                        setState(() {
+                                          _isCounting1 = false;
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
@@ -353,6 +378,17 @@ class _LoadPageState extends State<LoadPage> {
                                           .update({
                                         'RELAY_STATUS_2': value == true ? 1 : 0,
                                       });
+
+                                      if (data['RELAY_STATUS_2'] == 0) {
+                                        setState(() {
+                                          _isCounting2 = true;
+                                        });
+                                        _startCounter2();
+                                      } else {
+                                        setState(() {
+                                          _isCounting2 = false;
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
@@ -466,6 +502,16 @@ class _LoadPageState extends State<LoadPage> {
                                           .update({
                                         'RELAY_STATUS_3': value == true ? 1 : 0,
                                       });
+                                      if (data['RELAY_STATUS_3'] == 0) {
+                                        setState(() {
+                                          _isCounting3 = true;
+                                        });
+                                        _startCounter3();
+                                      } else {
+                                        setState(() {
+                                          _isCounting3 = false;
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
@@ -579,6 +625,17 @@ class _LoadPageState extends State<LoadPage> {
                                           .update({
                                         'RELAY_STATUS_4': value == true ? 1 : 0,
                                       });
+
+                                      if (data['RELAY_STATUS_4'] == 0) {
+                                        setState(() {
+                                          _isCounting4 = true;
+                                        });
+                                        _startCounter4();
+                                      } else {
+                                        setState(() {
+                                          _isCounting4 = false;
+                                        });
+                                      }
                                     },
                                   ),
                                 ),
