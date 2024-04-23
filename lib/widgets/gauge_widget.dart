@@ -65,14 +65,6 @@ class GaugeChart extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                           color: Colors.black),
                     ),
-                    Text(
-                      '$opium $sign',
-                      style: const TextStyle(
-                          fontFamily: 'QBold',
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
                     const SizedBox(
                       height: 20,
                     ),

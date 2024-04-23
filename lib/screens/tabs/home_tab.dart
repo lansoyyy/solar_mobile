@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:solar_mobile/screens/tabs/load_page.dart';
 import 'package:solar_mobile/screens/tabs/panel_page.dart';
+import 'package:solar_mobile/screens/tabs/panels/battery_panel.dart';
+import 'package:solar_mobile/screens/tabs/panels/solar_panel.dart';
+import 'package:solar_mobile/screens/tabs/panels/wind_panel.dart';
 import 'package:solar_mobile/widgets/text_widget.dart';
 
 class HomeTab extends StatelessWidget {
@@ -40,7 +43,7 @@ class HomeTab extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PanelPage()));
+                        builder: (context) => const SolarPanel()));
                   },
                   child: Container(
                     width: 175,
@@ -73,7 +76,7 @@ class HomeTab extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PanelPage()));
+                        builder: (context) => const WindPanel()));
                   },
                   child: Container(
                     width: 175,
@@ -114,7 +117,7 @@ class HomeTab extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const PanelPage()));
+                        builder: (context) => const BatteryPanel()));
                   },
                   child: Container(
                     width: 175,

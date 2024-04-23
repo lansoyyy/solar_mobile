@@ -45,6 +45,7 @@ dependencies:
   syncfusion_flutter_gauges:
   intl:
   firebase_database:
+  get:
 dev_dependencies:
   flutter_test:
     sdk: flutter
