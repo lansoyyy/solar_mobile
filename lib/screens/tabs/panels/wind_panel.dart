@@ -24,16 +24,26 @@ class _WindPanelState extends State<WindPanel> {
   void initState() {
     super.initState();
     FirebaseDatabase.instance
-        .ref('users/TEAM OTOG/728/')
+        .ref('users/TEAM OTOG/')
         .orderByKey()
+        .limitToFirst(1)
         .onValue
         .listen((DatabaseEvent event) {
       final dynamic data = event.snapshot.value;
 
-      setState(() {
-        panelData = data;
-        hasLoaded = true;
-      });
+      if (data != null && data is Map<Object?, Object?>) {
+        final List<MapEntry<Object?, Object?>> entries = data.entries.toList();
+        if (entries.isNotEmpty) {
+          final MapEntry<Object?, Object?> firstEntry = entries.first;
+          print(
+              'First entry key: ${firstEntry.key}, value: ${firstEntry.value}');
+          setState(() {
+            panelData = firstEntry.value;
+            hasLoaded = true;
+          });
+          // Now you can use firstEntry.key and firstEntry.value as needed
+        }
+      }
     });
   }
 
